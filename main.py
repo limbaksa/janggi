@@ -1,5 +1,6 @@
 import flet as ft
-
+from janggiBoard import janggiBoard
+from janggiplayer import Game
 def main(page: ft.Page):
     rail = ft.NavigationRail(
         selected_index=0,

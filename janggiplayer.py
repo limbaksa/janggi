@@ -11,6 +11,7 @@ class Player:
 
 class User(Player):
     def getMove(self)->str:
+        '''테스트용, 실제 앱에서는 드래그앤드롭으로 유저가 수를 두기 때문에 필요없음'''
         return input()
 
 class AI(Player):
@@ -56,12 +57,37 @@ class Game:
         else:
             self.players.append(AI(self.board,1))
 
-if __name__=='__main__':
-    g=Game(5,'AI','AI')
-    while True:
-        m=g.players[g.board.turn].getMove()
+    def played(self,start,dest):
+        res=self.board.move(start,dest)
+        if res==-1:
+            return True
+        return False
+
+    def AImove(self):
+        m=self.players[self.board.turn].getMove()
         move=janggibase.Piece.UCIToMove(m)
-        g.board.move(*move)
-        print('-'*50)
-        g.board.showBoard()
-        print('-'*50)
+        return self.played(*move)
+    
+    def UserMove(self,start,dest):
+        return self.played(start,dest)
+
+    def __teststart(self):
+        while True:
+            m=self.players[self.board.turn].getMove()
+            move=janggibase.Piece.UCIToMove(m)
+            res=self.board.move(*move)
+            while res==0:
+                m=self.players[self.board.turn].getMove()
+                move=janggibase.Piece.UCIToMove(m)
+                res=self.board.move(*move)
+            if res==-1:
+                break
+            print('-'*50)
+            self.board.showBoard()
+            print(self.board.makeFEN())
+            print('-'*50)
+        print(self.board.gameRecord)
+
+if __name__=='__main__':
+    g=Game(5,'User','User')
+    Game.__teststart(g)

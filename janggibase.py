@@ -252,7 +252,7 @@ class Board:
                     self.boardState[10*j+9-i]=Cannon(10*j+9-i,0,self)
                     self.pieces[0].append(self.boardState[10*j+9-i])
                 j+=1
-        self.turn=0 if fen_l[1]=='b' else 1
+        self.turn=0 if fen_l[1]=='w' else 1
 
     def piecesBetween(self,start:int, dest:int)->int:
         dx=dest//10-start//10
@@ -338,7 +338,7 @@ class Board:
             if blank:
                 fen+=str(blank)
             fen+='/'
-        fen+=' '+('w' if self.turn else 'b')
+        fen+=' '+('b' if self.turn else 'w')
         return fen
     
     def movePiece(self,start:int, dest:int)->bool:
@@ -355,7 +355,7 @@ class Board:
             return True
         return False
     
-    def move(self,start:int,dest:int)->bool:
+    def move(self,start:int,dest:int)->int:
         if self.boardState[start]:
             if self.boardState[start].isValidMove(dest):
                 if (self.kings[0].location//10==self.kings[1].location//10 or self.kings[0].location%10 ==self.kings[1].location%10) and self.piecesBetween(self.kings[0].location,self.kings[1].location)==0:
@@ -372,9 +372,12 @@ class Board:
                 self.boardState[start]=False
                 self.turn=1-self.turn
                 self.gameRecord.append([start,dest])
-                return True
+                if self.isGameOver(1-self.turn):
+                    self.gameRecord.append('1/2-1/2' if self.isBikjang() else f'{self.turn}-{1-self.turn}')
+                    return -1
+                return 1
         print(f'{start,dest} is an INVALID MOVE!')
-        return False
+        return 0
     
     def isGameOver(self,color:int)->bool:
         if self.isJanggoon(color):
