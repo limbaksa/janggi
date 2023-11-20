@@ -7,4 +7,5 @@ class janggiBoard(ft.UserControl):
         self.game=game
 
     def build(self):
+        self.game.AImove()
         return ft.Text(self.game.board.makeFEN())
