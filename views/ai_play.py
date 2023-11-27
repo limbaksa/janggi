@@ -3,12 +3,12 @@ from flet_route import Params, Basket
 import sys
 sys.path.append("..")
 from janggiBoard import janggiBoard
-from janggiplayer import Game
+from janggibase import Board
 class ai_play:
     def view(self,page:ft.Page, params:Params, basket:Basket):
 
         def nav_change(e):
-            page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/')
+            page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
         return ft.View(
             '/ai',
 
@@ -41,7 +41,7 @@ class ai_play:
                         ],
                     ),
                     ft.VerticalDivider(width=1),
-                    janggiBoard(Game(0,'AI','AI'))
+                    janggiBoard(Board(0))
                 ],expand=True)
             ]
         )

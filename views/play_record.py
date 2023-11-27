@@ -6,9 +6,9 @@ class play_record:
     def view(self,page:ft.Page, params:Params, basket:Basket):
 
         def nav_change(e):
-            page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/')
+            page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
         return ft.View(
-            '/ai',
+            '/record',
 
             controls=[
                 ft.Row([

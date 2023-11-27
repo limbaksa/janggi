@@ -3,14 +3,14 @@ from flet_route import Params, Basket
 import sys
 sys.path.append("..")
 from janggiBoard import janggiBoard
-from janggiplayer import Game
+from janggibase import Board
 class self_play:
     def __init__(self):
-        self.game=None
+        self.board=None
         self.variant=-1
 
     def view(self,page:ft.Page,params:Params,basket:Basket):
-        if self.game is not None:
+        if self.board is not None:
             def nav_change(e):
                 page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
 
@@ -46,7 +46,7 @@ class self_play:
                             ],
                         ),
                         ft.VerticalDivider(width=1),
-                        janggiBoard(self.game)
+                        janggiBoard(self.board)
                     ],expand=True)
                 ]
             )
@@ -54,7 +54,7 @@ class self_play:
             if self.variant==-1:
                 self.variant=0
                 def nav_change(e):
-                    page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/')
+                    page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
 
                 def set_variant_0_1(e):
                     dlg.open=False
@@ -119,9 +119,8 @@ class self_play:
                 )
                 dlg2.open=True
                 def reload_page(e):
-                    print('asdfasdfasf')
+                    page.go('/re/self')
                     page.update()
-                    page.go('/self')
                 return ft.View(
                     '/self',
 
@@ -161,10 +160,9 @@ class self_play:
                     ]
                 )
             else:
-                self.game=Game(self.variant,'User','User')
-                print(self.variant)
+                self.board=Board(self.variant)
                 def nav_change(e):
-                    page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/')
+                    page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
 
                 return ft.View(
                     '/self',
@@ -198,7 +196,7 @@ class self_play:
                                 ],
                             ),
                             ft.VerticalDivider(width=1),
-                            janggiBoard(self.game)
+                            janggiBoard(self.board)
                         ],expand=True)
                     ]
                 )

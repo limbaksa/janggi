@@ -1,9 +1,10 @@
 import flet as ft
 from flet_route import Routing, path
-from views.main_view import main_view
+from views.start_view import start_view
 from views.self_play import self_play
 from views.ai_play import ai_play
 from views.play_record import play_record
+from views.reload import reload
 
 def main(page: ft.Page):
     self=self_play()
@@ -11,7 +12,8 @@ def main(page: ft.Page):
     record=play_record()
 
     app_routes=[
-        path(url='/',clear=True,view=main_view),
+        path(url='/',clear=True,view=start_view),
+        path(url='/re/:page',clear=True,view=reload),
         path(url='/self',clear=True,view=self.view),
         path(url='/ai',clear=True,view=ai.view),
         path(url='/record',clear=True,view=record.view)
