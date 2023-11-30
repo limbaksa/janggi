@@ -9,11 +9,19 @@ class self_play:
         self.board=None
         self.variant=-1
 
+    
     def view(self,page:ft.Page,params:Params,basket:Basket):
         if self.board is not None:
             def nav_change(e):
                 page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
 
+            def reset(e):
+                self.board=None
+                self.variant=-1
+                page.go('/re/self')
+                page.update()
+
+            reset_button=ft.ElevatedButton(content=ft.Text("대국 초기화"),on_click=reset)
             return ft.View(
                 '/self',
 
@@ -46,7 +54,9 @@ class self_play:
                             ],
                         ),
                         ft.VerticalDivider(width=1),
-                        janggiBoard(self.board)
+                        janggiBoard(self.board),
+                        reset_button,
+                        ft.VerticalDivider(width=1),
                     ],expand=True)
                 ]
             )
@@ -65,32 +75,32 @@ class self_play:
                     page.update()
 
                 def set_variant_1(e):
-                    dlg.open=False
+                    dlg2.open=False
                     page.update()
                     self.variant+=1
 
                 def set_variant_2(e):
-                    dlg.open=False
+                    dlg2.open=False
                     page.update()
                     self.variant+=2
 
                 def set_variant_3(e):
-                    dlg.open=False
+                    dlg2.open=False
                     page.update()
                     self.variant+=3
 
                 def set_variant_4(e):
-                    dlg2.open=False
+                    dlg.open=False
                     page.update()
                     self.variant+=4
 
                 def set_variant_8(e):
-                    dlg2.open=False
+                    dlg.open=False
                     page.update()
                     self.variant+=8
 
                 def set_variant_12(e):
-                    dlg2.open=False
+                    dlg.open=False
                     page.update()
                     self.variant+=12
 
@@ -101,9 +111,9 @@ class self_play:
                     title=ft.Text("초 상차림 선택"),
                     actions=[
                         ft.TextButton("상마상마",on_click=set_variant_0_1),
-                        ft.TextButton("마상상마",on_click=set_variant_1),
-                        ft.TextButton("상마마상",on_click=set_variant_2),
-                        ft.TextButton("마상마상",on_click=set_variant_3)
+                        ft.TextButton("마상상마",on_click=set_variant_4),
+                        ft.TextButton("상마마상",on_click=set_variant_8),
+                        ft.TextButton("마상마상",on_click=set_variant_12)
                     ]
                 )
                 dlg.open=True
@@ -112,9 +122,9 @@ class self_play:
                     title=ft.Text("한 상차림 선택"),
                     actions=[
                         ft.TextButton("상마상마",on_click=set_variant_0_2),
-                        ft.TextButton("마상상마",on_click=set_variant_4),
-                        ft.TextButton("상마마상",on_click=set_variant_8),
-                        ft.TextButton("마상마상",on_click=set_variant_12)
+                        ft.TextButton("마상상마",on_click=set_variant_1),
+                        ft.TextButton("상마마상",on_click=set_variant_2),
+                        ft.TextButton("마상마상",on_click=set_variant_3)
                     ]
                 )
                 dlg2.open=True
@@ -164,6 +174,13 @@ class self_play:
                 def nav_change(e):
                     page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
 
+                def reset(e):
+                    self.board=None
+                    self.variant=-1
+                    page.go('/re/self')
+                    page.update()
+
+                reset_button=ft.ElevatedButton(content=ft.Text("대국 초기화"),on_click=reset)
                 return ft.View(
                     '/self',
 
@@ -196,7 +213,9 @@ class self_play:
                                 ],
                             ),
                             ft.VerticalDivider(width=1),
-                            janggiBoard(self.board)
+                            janggiBoard(self.board),
+                            reset_button,
+                            ft.VerticalDivider(width=1),
                         ],expand=True)
                     ]
                 )

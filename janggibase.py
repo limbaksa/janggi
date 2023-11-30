@@ -51,7 +51,7 @@ class Piece:
         return (startint,destint)
         
     def isValidMove(self, dest: int) -> bool:
-        if self.isAttacking(dest):
+        if self.isAttacking(dest) and self.board.pieceColor(dest)!=self.color:
             tempBoard=Board(0,self.board.makeFEN())
             tempBoard.movePiece(self.location,dest)
             if not tempBoard.isJanggoon(self.color):
@@ -379,7 +379,7 @@ class Board:
         print(f'{start,dest} is an INVALID MOVE!')
         return 0
     
-    def isGameOver(self,color:int)->bool:
+    def isGameOver(self,color:int)->str:
         if self.isJanggoon(color):
             checkmate=True
             for i in self.pieces[color]:
@@ -387,15 +387,13 @@ class Board:
                     checkmate=False
                     break
             if checkmate:
-                print(f"{['black','white'][color]} win")
-                return True
+                return f"{['한','초'][color]} 승"
             else:
-                return False
+                return ''
         elif self.isBikjang():
-            print('Draw!')
-            return True
+            return "무승부"
         else:
-            return False
+            return ''
 
 
 

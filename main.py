@@ -10,7 +10,7 @@ def main(page: ft.Page):
     self=self_play()
     ai=ai_play()
     record=play_record()
-
+    
     app_routes=[
         path(url='/',clear=True,view=start_view),
         path(url='/re/:page',clear=True,view=reload),
