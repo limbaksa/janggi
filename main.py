@@ -5,12 +5,12 @@ from views.self_play import self_play
 from views.ai_play import ai_play
 from views.play_record import play_record
 from views.reload import reload
-
+from db import db
 def main(page: ft.Page):
-    self=self_play()
+    self=self_play()    
     ai=ai_play()
     record=play_record()
-    
+    db.makedb()
     app_routes=[
         path(url='/',clear=True,view=start_view),
         path(url='/re/:page',clear=True,view=reload),
@@ -18,7 +18,9 @@ def main(page: ft.Page):
         path(url='/ai',clear=True,view=ai.view),
         path(url='/record',clear=True,view=record.view)
     ]
-    
+    page.window_width=1280
+    page.window_height=720
+    page.window_resizable = False
     Routing(page=page,app_routes=app_routes)
 
     page.title='장기'

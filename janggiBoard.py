@@ -2,6 +2,7 @@ import flet as ft
 import janggibase
 from janggiplayer import AI
 import flet.canvas as cv
+from db import db
 
 class janggiPiece(ft.GestureDetector):
     def __init__(self,piece:janggibase.Piece,board:"janggiBoard"):
@@ -80,17 +81,17 @@ class janggiPiece(ft.GestureDetector):
                     if trymove:
                         self.place(slot)
                         self.update()
-                        if self.board.board.isGameOver(self.board.board.turn):
+                        if trymove==-1:
                             self.board.gameOver(self.board.board.isGameOver(self.board.board.turn))
 
                         if self.board.ai:
                             m=self.board.ai.getMove()
                             move=janggibase.Piece.UCIToMove(m)
-                            self.board.board.move(*move)
+                            trymove=self.board.board.move(*move)
                             piece=self.board.slots[move[0]].ontop
                             piece.place(self.board.slots[move[1]])
                             piece.update()
-                            if self.board.board.isGameOver(self.board.board.turn):
+                            if trymove==-1:
                                 self.board.gameOver(self.board.board.isGameOver(self.board.board.turn))
 
                         return
@@ -196,12 +197,43 @@ class janggiBoard(ft.Stack):
         self.controls.extend(self.piecelist)
 
         
-        
+    def skipTurn(self,e)-> bool:
+        trymove=self.board.move(0,0)
+        if trymove:
+            if trymove==-1:
+                self.gameOver(self.board.isGameOver(self.board.turn))
+
+            if self.ai:
+                m=self.ai.getMove()
+                move=janggibase.Piece.UCIToMove(m)
+                trymove=self.board.move(*move)
+                piece=self.slots[move[0]].ontop
+                piece.place(self.slots[move[1]])
+                piece.update()
+                if trymove==-1:
+                    self.gameOver(self.board.isGameOver(self.board.turn))
+            return True
+        else:
+            return False
+    
+    def resign(self,e):
+        if (not self.ai) or self.aiturn!=self.board.turn and not self.board.gameOver:
+            tryresign=self.board.resign()
+            if tryresign:
+                self.gameOver(tryresign)
+
     def gameOver(self,result):
         dlg=ft.AlertDialog(title=ft.Text(result,size=50,color=ft.colors.GREEN if result[0]=='초' else ft.colors.RED if result[0]=='한' else ft.colors.GREY))
         dlg.open=True
         self.controls.append(dlg)
         self.update()
+        if self.ai:
+            if self.aiturn:
+                db.add_game('USER','AI',(len(self.board.gameRecord)+1)//2,result,' '.join(self.board.gameRecord))
+            else:
+                db.add_game('AI','USER',(len(self.board.gameRecord)+1)//2,result,' '.join(self.board.gameRecord))
+        else:
+            db.add_game('USER','USER',(len(self.board.gameRecord)+1)//2,result,' '.join(self.board.gameRecord))
     
     def AI_firstmove(self):
         m=self.ai.getFirstMove()

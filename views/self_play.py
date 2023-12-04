@@ -22,6 +22,9 @@ class self_play:
                 page.update()
 
             reset_button=ft.ElevatedButton(content=ft.Text("대국 초기화"),on_click=reset)
+            board=janggiBoard(self.board)
+            turn_skip_button=ft.ElevatedButton(content=ft.Text("한 수 쉼"),on_click=board.skipTurn)
+            resign_button=ft.ElevatedButton(content=ft.Text("기권"),on_click=board.resign)
             return ft.View(
                 '/self',
 
@@ -54,8 +57,8 @@ class self_play:
                             ],
                         ),
                         ft.VerticalDivider(width=1),
-                        janggiBoard(self.board),
-                        reset_button,
+                        board,
+                        ft.Column(controls=[turn_skip_button,resign_button,reset_button],alignment=ft.alignment.center,horizontal_alignment=ft.CrossAxisAlignment.CENTER,height=600),
                         ft.VerticalDivider(width=1),
                     ],expand=True)
                 ]
@@ -165,7 +168,7 @@ class self_play:
                             ft.VerticalDivider(width=1),
                             dlg2,
                             dlg,
-                            ft.ElevatedButton(text='대국 시작',on_click=reload_page)
+                            ft.Column([ft.ElevatedButton(text='대국 시작',on_click=reload_page,width=400)],alignment=ft.MainAxisAlignment.CENTER,horizontal_alignment=ft.CrossAxisAlignment.CENTER,width=1170)
                         ],expand=True)
                     ]
                 )
@@ -181,6 +184,9 @@ class self_play:
                     page.update()
 
                 reset_button=ft.ElevatedButton(content=ft.Text("대국 초기화"),on_click=reset)
+                board=janggiBoard(self.board)
+                turn_skip_button=ft.ElevatedButton(content=ft.Text("한 수 쉼"),on_click=board.skipTurn)
+                resign_button=ft.ElevatedButton(content=ft.Text("기권"),on_click=board.resign)
                 return ft.View(
                     '/self',
 
@@ -213,8 +219,8 @@ class self_play:
                                 ],
                             ),
                             ft.VerticalDivider(width=1),
-                            janggiBoard(self.board),
-                            reset_button,
+                            board,
+                            ft.Column(controls=[turn_skip_button,resign_button,reset_button],alignment=ft.MainAxisAlignment.CENTER,height=600),
                             ft.VerticalDivider(width=1),
                         ],expand=True)
                     ]

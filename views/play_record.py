@@ -39,6 +39,7 @@ class play_record:
                         ],
                     ),
                     ft.VerticalDivider(width=1),
+                    ft.DataTable()
                 ],expand=True)
             ]
         )

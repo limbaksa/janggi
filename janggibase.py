@@ -51,7 +51,7 @@ class Piece:
         return (startint,destint)
         
     def isValidMove(self, dest: int) -> bool:
-        if self.isAttacking(dest) and self.board.pieceColor(dest)!=self.color:
+        if self.isAttacking(dest) and self.board.pieceColor(dest)!=self.color and not self.board.gameOver:
             tempBoard=Board(0,self.board.makeFEN())
             tempBoard.movePiece(self.location,dest)
             if not tempBoard.isJanggoon(self.color):
@@ -195,6 +195,8 @@ class Board:
         self.variant=variant
         self.wasBikjang:bool=False
         self.gameRecord:list=[]
+        self.boardRecord:list=[]
+        self.gameOver=0
         l=['eh','he']
         L=['EH','HE']
         if not fen:
@@ -253,6 +255,7 @@ class Board:
                     self.pieces[0].append(self.boardState[10*j+9-i])
                 j+=1
         self.turn=0 if fen_l[1]=='w' else 1
+        self.boardRecord.append(self.makeFEN())
 
     def piecesBetween(self,start:int, dest:int)->int:
         dx=dest//10-start//10
@@ -356,6 +359,25 @@ class Board:
         return False
     
     def move(self,start:int,dest:int)->int:
+        if self.gameOver:
+            return 0
+        if start==0 and dest==0:
+            if not self.isJanggoon(self.turn):
+                if (self.kings[0].location//10==self.kings[1].location//10 or self.kings[0].location%10 ==self.kings[1].location%10) and self.piecesBetween(self.kings[0].location,self.kings[1].location)==0:
+                    self.wasBikjang=True
+                else:
+                    self.wasBikjang=False
+                self.turn=1-self.turn
+                self.gameRecord.append('@@@@')
+                self.boardRecord.append(self.makeFEN())
+                if self.isGameOver(self.turn):
+                    self.gameRecord.append('1/2-1/2' if self.isGameOver(self.turn)=='무승부' else f'{self.turn}-{1-self.turn}')
+                    return -1
+                return 1
+            else:
+                print('장군일 때는 수를 쉴 수 없습니다.')
+                return 0
+
         if self.boardState[start]:
             if self.boardState[start].isValidMove(dest):
                 if (self.kings[0].location//10==self.kings[1].location//10 or self.kings[0].location%10 ==self.kings[1].location%10) and self.piecesBetween(self.kings[0].location,self.kings[1].location)==0:
@@ -371,9 +393,10 @@ class Board:
                 self.boardState[dest].location=dest
                 self.boardState[start]=False
                 self.turn=1-self.turn
-                self.gameRecord.append([start,dest])
-                if self.isGameOver(1-self.turn):
-                    self.gameRecord.append('1/2-1/2' if self.isBikjang() else f'{self.turn}-{1-self.turn}')
+                self.gameRecord.append(f'{start:0>2}{dest:0>2}')
+                self.boardRecord.append(self.makeFEN())
+                if self.isGameOver(self.turn):
+                    self.gameRecord.append('1/2-1/2' if self.isGameOver(self.turn)=='무승부' else f'{self.turn}-{1-self.turn}')
                     return -1
                 return 1
         print(f'{start,dest} is an INVALID MOVE!')
@@ -387,11 +410,23 @@ class Board:
                     checkmate=False
                     break
             if checkmate:
+                self.gameOver=1
                 return f"{['한','초'][color]} 승"
             else:
                 return ''
-        elif self.isBikjang():
+        if self.gameOver==1:
+            return f"{['한','초'][self.turn]} 승"
+        if self.isBikjang() or self.boardRecord.count(self.makeFEN())>=3:
+            self.gameOver=2
             return "무승부"
+        else:
+            return ''
+    
+    def resign(self)->str:
+        if not self.gameOver:
+            self.gameRecord.append(f'{self.turn}-{1-self.turn}')
+            self.gameOver=1
+            return f'{["한","초"][self.turn]} 승'
         else:
             return ''
 

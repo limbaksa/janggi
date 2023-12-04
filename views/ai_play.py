@@ -22,6 +22,9 @@ class ai_play:
                 page.update()
 
             reset_button=ft.ElevatedButton(content=ft.Text("대국 초기화"),on_click=reset)
+            board=janggiBoard(self.board,ai=True,aiturn=self.aiturn)
+            turn_skip_button=ft.ElevatedButton(content=ft.Text("한 수 쉼"),on_click=board.skipTurn)
+            resign_button=ft.ElevatedButton(content=ft.Text("기권"),on_click=board.resign)
             return ft.View(
                 '/ai',
 
@@ -54,8 +57,8 @@ class ai_play:
                             ],
                         ),
                         ft.VerticalDivider(width=1),
-                        janggiBoard(self.board,ai=True,aiturn=self.aiturn),
-                        ft.Column(controls=[reset_button],alignment=ft.MainAxisAlignment.END),
+                        board,
+                        ft.Column(controls=[turn_skip_button,resign_button,reset_button],alignment=ft.MainAxisAlignment.CENTER,height=600),
                         ft.VerticalDivider(width=1),
                     ],expand=True)
                 ]
@@ -183,7 +186,7 @@ class ai_play:
                             dlg2,
                             dlg,
                             turndlg,
-                            ft.ElevatedButton(text='대국 시작',on_click=reload_page)
+                            ft.Column([ft.ElevatedButton(text='대국 시작',on_click=reload_page,width=400)],alignment=ft.MainAxisAlignment.CENTER,horizontal_alignment=ft.CrossAxisAlignment.CENTER,width=1170)
                         ],expand=True)
                     ]
                 )
@@ -205,6 +208,8 @@ class ai_play:
 
                 reset_button=ft.ElevatedButton(content=ft.Text("대국 초기화"),on_click=reset)
                 board=janggiBoard(self.board,ai=True,aiturn=self.aiturn)
+                turn_skip_button=ft.ElevatedButton(content=ft.Text("한 수 쉼"),on_click=board.skipTurn)
+                resign_button=ft.ElevatedButton(content=ft.Text("기권"),on_click=board.resign)
                 if self.aiturn==0:
                     board.AI_firstmove()
                     self.board=board.board
@@ -243,7 +248,7 @@ class ai_play:
                             ),
                             ft.VerticalDivider(width=1),
                             board,
-                            ft.Column(controls=[reset_button],alignment=ft.MainAxisAlignment.END),
+                            ft.Column(controls=[turn_skip_button,resign_button,reset_button],alignment=ft.MainAxisAlignment.CENTER,height=600),
                             ft.VerticalDivider(width=1),
                         ],expand=True)
                     ]
