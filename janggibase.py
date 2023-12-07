@@ -21,6 +21,20 @@
 궁 내에서 움직임 구현
 30,32,50,52에서 41로 이동 가능
 41에서 30,32,50,52로 이동 가능
+
+한국장기협회식 표기법
+    1 2 3 4 5 6 7 8 9
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+  0
+  ->1~0이 십의자리, 1~9가 일의자리 
 """
 alphabet=['a','b','c','d','e','f','g','h','i']
 palace=[[30,31,32,40,41,42,50,51,52],[37,38,39,47,48,49,57,58,59]]
@@ -49,7 +63,21 @@ class Piece:
         startint=alphabet.index(start[0])*10+int(start[1])
         destint=alphabet.index(dest[0])*10+int(dest[1])
         return (startint,destint)
-        
+    
+    @staticmethod
+    def moveToNotation(start:int,dest:int)->str:
+        if start==0 and dest==0:
+            return '수 쉼'
+        s0=start//10
+        s1=start%10
+        d0=dest//10
+        d1=dest%10
+        s0+=1
+        d0+=1
+        s1=(10-s1)%10
+        d1=(10-d1)%10
+        return f'{s1}{s0}{d1}{d0}'
+
     def isValidMove(self, dest: int) -> bool:
         if self.isAttacking(dest) and self.board.pieceColor(dest)!=self.color and not self.board.gameOver:
             tempBoard=Board(0,self.board.makeFEN())

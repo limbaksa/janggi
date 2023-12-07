@@ -16,7 +16,7 @@ def main(page: ft.Page):
         path(url='/re/:page',clear=True,view=reload),
         path(url='/self',clear=True,view=self.view),
         path(url='/ai',clear=True,view=ai.view),
-        path(url='/record',clear=True,view=record.view)
+        path(url='/record/:id',clear=True,view=record.view)
     ]
     page.window_width=1280
     page.window_height=720

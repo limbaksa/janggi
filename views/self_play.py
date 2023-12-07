@@ -13,7 +13,7 @@ class self_play:
     def view(self,page:ft.Page,params:Params,basket:Basket):
         if self.board is not None:
             def nav_change(e):
-                page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
+                page.go('/ai' if e.control.selected_index==1 else '/record/0' if e.control.selected_index==2 else '/self')
 
             def reset(e):
                 self.board=None
@@ -58,7 +58,7 @@ class self_play:
                         ),
                         ft.VerticalDivider(width=1),
                         board,
-                        ft.Column(controls=[turn_skip_button,resign_button,reset_button],alignment=ft.alignment.center,horizontal_alignment=ft.CrossAxisAlignment.CENTER,height=600),
+                        ft.Column(controls=[turn_skip_button,resign_button,reset_button],alignment=ft.MainAxisAlignment.CENTER,height=600),
                         ft.VerticalDivider(width=1),
                     ],expand=True)
                 ]
@@ -67,7 +67,7 @@ class self_play:
             if self.variant==-1:
                 self.variant=0
                 def nav_change(e):
-                    page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
+                    page.go('/ai' if e.control.selected_index==1 else '/record/0' if e.control.selected_index==2 else '/self')
 
                 def set_variant_0_1(e):
                     dlg.open=False
@@ -124,10 +124,10 @@ class self_play:
                     modal=True,
                     title=ft.Text("한 상차림 선택"),
                     actions=[
-                        ft.TextButton("상마상마",on_click=set_variant_0_2),
+                        ft.TextButton("상마상마",on_click=set_variant_3),
                         ft.TextButton("마상상마",on_click=set_variant_1),
                         ft.TextButton("상마마상",on_click=set_variant_2),
-                        ft.TextButton("마상마상",on_click=set_variant_3)
+                        ft.TextButton("마상마상",on_click=set_variant_0_2)
                     ]
                 )
                 dlg2.open=True
@@ -175,7 +175,7 @@ class self_play:
             else:
                 self.board=Board(self.variant)
                 def nav_change(e):
-                    page.go('/ai' if e.control.selected_index==1 else '/record' if e.control.selected_index==2 else '/self')
+                    page.go('/ai' if e.control.selected_index==1 else '/record/0' if e.control.selected_index==2 else '/self')
 
                 def reset(e):
                     self.board=None

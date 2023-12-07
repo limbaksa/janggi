@@ -27,13 +27,11 @@ class janggiPiece(ft.GestureDetector):
         self.board.update()
 
     def bounce_back(self):
-        """Returns card to its original position"""
         self.top = self.slot.top
         self.left = self.slot.left
         self.update()
 
     def place(self, slot):
-        """Place card to the slot"""
         self.slot.ontop=None
         self.top = slot.top
         self.left = slot.left
@@ -229,11 +227,11 @@ class janggiBoard(ft.Stack):
         self.update()
         if self.ai:
             if self.aiturn:
-                db.add_game('USER','AI',(len(self.board.gameRecord)+1)//2,result,' '.join(self.board.gameRecord))
+                db.add_game('USER','AI',(len(self.board.gameRecord)+1)//2,result,self.board.variant,' '.join(self.board.gameRecord))
             else:
-                db.add_game('AI','USER',(len(self.board.gameRecord)+1)//2,result,' '.join(self.board.gameRecord))
+                db.add_game('AI','USER',(len(self.board.gameRecord)+1)//2,result,self.board.variant,' '.join(self.board.gameRecord))
         else:
-            db.add_game('USER','USER',(len(self.board.gameRecord)+1)//2,result,' '.join(self.board.gameRecord))
+            db.add_game('USER','USER',(len(self.board.gameRecord)+1)//2,result,self.board.variant,' '.join(self.board.gameRecord))
     
     def AI_firstmove(self):
         m=self.ai.getFirstMove()

@@ -6,4 +6,6 @@ def reload(page,params,basket):
     elif params.page=='ai':
         page.go('/ai')
     elif params.page=='record':
-        page.go('/record')
+        page.go('/record/0')
+    else:
+        page.go(f'/record/{params.page[6:]}')
