@@ -1,5 +1,5 @@
 import flet as ft
-from flet_route import Routing, path
+from flet_route import Routing, path    
 from views.start_view import start_view
 from views.self_play import self_play
 from views.ai_play import ai_play
